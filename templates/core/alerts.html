@@ -1,0 +1,22 @@
+
+
+{% if messages %}
+<div class="container" id="messages" class="messages">
+<div class="messages">
+    {% for message in messages %}
+    <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %} role="alert">{{ message }}
+    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button></div>
+    {% endfor %}
+</div>
+</div>
+{% endif %}
+
+<script>
+    setTimeout(function() {
+        var messages = document.querySelector('.messages');
+        if (messages) {
+          messages.style.display = 'none';
+        }
+      }, 4000);
+    
+</script>

@@ -1,0 +1,65 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+{% block after_field_sets %}
+    {{ block.super }}
+    <script>
+        $(document).ready(function() {
+            $('#id_sub_category').empty();
+            $('#id_sub_category').append('<option value="">Select Sub category</option>');
+            $('#id_detail_category').empty();
+            $('#id_detail_category').append('<option value="">Select Detail category</option>');
+            
+            $('#id_category').change(function() {
+                $('#id_sub_category').empty();
+                $('#id_sub_category').append('<option value="">Select Sub category</option>');
+                $('#id_detail_category').empty();
+                $('#id_detail_category').append('<option value="">Select Detail category</option>');
+                var categoryId = $(this).val();
+                if (categoryId) {
+                    $.ajax({
+                        url: '{% url "get_subcategories" %}',
+                        data: {
+                            'category_id': categoryId,
+
+                        },
+                        success: function(data) {
+                            $.each(data.subcategories, function(index, element) {
+                                $('#id_sub_category').append('<option value="' + element.id + '">' + element.name + '</option>');
+                            });
+                        }
+                    });
+                } else {
+                    $('#id_sub_category').empty();
+                    $('#id_sub_category').append('<option value="">Select Subcategory</option>');
+                }
+            });
+
+            $('#id_sub_category').change(function() {
+                var subCategoryId = $(this).val();
+                if (subCategoryId) {
+                    $.ajax({
+                        url: '{% url "get_subcategories" %}',
+                        data: {
+                            'subCategory_id': subCategoryId,
+
+                        },
+                        success: function(data) {
+                            $.each(data.detailcategories, function(index, element) {
+                                $('#id_detail_category').append('<option value="' + element.id + '">' + element.name + '</option>');
+                            });
+                        }
+                    });
+                } else {
+                    $('#id_detail_category').empty();
+                    $('#id_detail_category').append('<option value="">Select Detail Category</option>');
+                }
+            });
+        });
+    </script>
+{% endblock %}
